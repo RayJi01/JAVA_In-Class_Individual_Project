@@ -1,0 +1,42 @@
+package ruiji_CSCI201_Lab5;
+
+import java.util.ArrayList;
+import java.util.List;
+import java.util.concurrent.*;
+import java.util.concurrent.locks.Condition;
+
+public class Real_Multithread extends Thread{
+	private List<Integer> storage;
+	private int search_num;
+	private long start;
+	private long end;
+	private static int result;
+	private long time_used;
+	
+	public Real_Multithread(List<Integer> input_list, int search_num, int start, int end) {
+		this.storage = input_list;
+		this.search_num = search_num;
+		this.start = start;
+		this.end = end;
+	}
+	
+	public void run(int start, int end) {
+		this.start = System.nanoTime();
+		for(int i = start; i < end; i++) {
+			if(storage.get(i).intValue() == search_num) {
+				this.end = System.nanoTime();
+				this.time_used = this.end - this.start;
+				System.out.println("Find the items from multithread with + " + time_used + " time. ");
+				result = i;
+			}
+		}
+		
+		this.end = System.nanoTime();
+		this.time_used = this.end - this.start;
+		result = -1;
+	}
+	
+	public static int getResult() {
+		return result;
+	}
+}

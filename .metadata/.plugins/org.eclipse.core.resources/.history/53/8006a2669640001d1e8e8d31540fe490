@@ -1,0 +1,21 @@
+package ruiji_CSCI201_Assignment2;
+
+import java.text.DateFormat;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import java.util.TimeZone;
+
+public class SettleDate {
+	public static void main(String args[]) {
+		long milliSec = 3010;
+		
+		// Creating date format
+		DateFormat simple = new SimpleDateFormat("dd MMM yyyy HH:mm:ss:SSS Z");
+		simple.setTimeZone(TimeZone.getTimeZone("UTC"));
+		
+		// Creating date from milliseconds using Date() constructor
+		Date result = new Date(milliSec);
+		
+		System.out.println(simple.format(result));
+	}
+}

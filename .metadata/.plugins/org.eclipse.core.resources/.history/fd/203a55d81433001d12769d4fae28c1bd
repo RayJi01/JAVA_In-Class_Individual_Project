@@ -1,0 +1,27 @@
+package ruiji_CSCI201_Lab3;
+
+public class Subscriber extends Thread{
+	private MessageQueue s;
+	
+	public Subscriber(MessageQueue s) {
+		this.s = s;
+	}
+	
+	public void run() {
+		try {
+			int i = 0;
+			while(i < 20) {
+				String cout = this.s.getMessage();
+				if(cout.equals("")) {
+					System.out.println("Subscriber - there is no input")
+				}
+				String time = Util.getCurrentTime();
+				System.out.println("Subscriber - " + cout + " " + time + ". we are reading the message out right now");
+				i++;
+				Thread.sleep(500);
+			}
+		}catch(InterruptedException e) {
+			e.printStackTrace();
+		}
+	}
+}

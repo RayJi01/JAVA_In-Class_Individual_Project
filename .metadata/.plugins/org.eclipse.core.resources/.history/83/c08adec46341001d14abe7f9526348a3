@@ -1,0 +1,23 @@
+package ruiji_CSCI201_Assignment2;
+
+import java.util.concurrent.ExecutorService;
+import java.util.concurrent.Executors;
+
+public class CurrentBalance implements Runnable{
+	private int balance;
+	
+	public CurrentBalance(int bl) {
+		this.balance = bl;
+	}
+	
+	public synchronized void setBalance(int amount) {
+		balance -= amount;
+		Thread.yield();
+	}
+
+	public void run() {
+			
+	}
+}
+
+

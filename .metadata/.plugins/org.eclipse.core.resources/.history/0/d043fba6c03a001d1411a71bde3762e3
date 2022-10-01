@@ -1,0 +1,72 @@
+package ruiji_CSCI201_Assignment2;
+
+import java.io.File;
+import ruiji_CSCI201_Assignment2.Stock_Broker;
+import java.io.FileNotFoundException;
+import java.util.Scanner;
+
+import com.google.gson.Gson;
+import com.google.gson.JsonParseException;
+import com.google.gson.JsonSyntaxException;
+
+public class Json_readln {
+	public static void main(String []args) {
+		Scanner sc = new Scanner(System.in); //place to check whether the file can be opened or not.
+		String filename = "";                
+		String temp = "";
+		Gson gson = new Gson();              //scan the Json File. 
+		boolean error = false;
+		do {
+			error = false;
+			try {
+				System.out.println("What is the name of the file that containing company information?");
+				filename = sc.nextLine();
+				File new_file = new File(filename);
+				Scanner newFile = new Scanner(new_file);
+				while(newFile.hasNext()) {
+					temp += newFile.nextLine();
+				}
+				Stock_Broker trial = gson.fromJson(temp, Stock_Broker.class);
+				if(trial.check_misising() == true) {
+					System.out.println("The file " + filename + " is not formatted properly - missing keys");
+					error = true;
+				}
+			}catch(FileNotFoundException e){
+				System.out.println("The file " + filename + " cannot be found.");
+				error = true;
+//			}catch(JsonSyntaxException e) {
+//				System.out.println("The file " + filename + " is not formatted properly");
+//				error = true;
+//			}catch(JsonParseException e) {
+//				System.out.println("The file " + filename + " is not formatted properly");
+//				error = true;
+//			}
+		}while(error);
+		
+		Stock_Broker stock_list = gson.fromJson(temp, Stock_Broker.class);
+		System.out.println("The file has been properly read.");
+		System.out.println(" ");
+		
+		String temp_CSV = "";
+		do {
+			error = false;
+			try {
+				filename = sc.nextLine();
+				File new_CSV = new File(filename);
+				Scanner newFile = new Scanner(new_CSV);
+				newFile.useDelimiter(",");                     //that is how we work with CSV file. We seprate the file by ","
+				while(newFile.hasNext()) {
+					temp_CSV += newFile.next();
+					System.out.println(newFile.next());
+				}
+			}catch(FileNotFoundException e) {
+				System.out.println("The file " + filename + " cannot be found.");
+				error = true;
+			}
+		}while(error);
+		
+		String Balance = sc.nextLine();
+		int balance = Integer.parseInt(Balance);
+		
+	}
+}

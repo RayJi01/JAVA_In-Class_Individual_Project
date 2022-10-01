@@ -1,0 +1,68 @@
+package ruiji_CSCI201_Assignment2;
+
+import java.util.List;
+import java.util.concurrent.Semaphore;
+import ruiji_CSCI201_Assignment2.SettleDate;
+
+public class Operations extends Thread {
+	private Semaphore semaphore;
+	private String ticker;
+	private int quantity;
+	private List<Integer> current_balance;
+	private int stock_price;
+	private int getTime;
+	
+	public Operations(int Broker_num, String ticker, int quantity, List<Integer> current_balance, int stock_price, int getTime) {
+		this.semaphore = new Semaphore(Broker_num);
+		this.ticker = ticker;
+		this.quantity = quantity;
+		this.current_balance = current_balance;
+		this.stock_price = stock_price;
+		this.getTime = getTime;
+	}
+	
+	public void run() {
+		try {
+			semaphore.acquire();                                                //acquire the lock. 
+			
+			Thread.sleep(getTime*1000);                                                 //sleep for 2 seconds first before trade
+			
+			SettleDate timestamp = new SettleDate(0);                            //set up the right now time. 
+			
+			//selling processes started, and the thread will sleep for 3 seconds to finish his job. 
+			if(quantity < 0) {                                                   
+				if(quantity == -1) System.out.println("[" + timestamp.getTime() + "]" +  " Start to sell of " + quantity * -1 + " stock of " + ticker);
+				else
+					System.out.println("[" + timestamp.getTime() + "]" + "Start to sell of" + quantity * -1 + " stocks of " + ticker);
+					
+				current_balance.set(0, current_balance.get(0) + quantity * stock_price);
+				Thread.sleep(3000);
+				if(quantity == -1) System.out.println("[" + timestamp.getTime() + "]" + " Finish selling of " + quantity * -1 + " stock of " + ticker);
+				else
+					System.out.println("[" + timestamp.getTime() + "]" + "Finish selling of" + quantity * -1 + " stocks of " + ticker);;
+			}
+			//Buying processes started, and the thread will sleep for 2 seconds to finish his job. 
+			else {                                                             
+				if(quantity == 1) System.out.println("[" + timestamp.getTime() + "]" + "Start to sell of " + quantity + " stock of " + ticker);
+				else
+					System.out.println("[" + timestamp.getTime() + "]" + "Start to sell of" + quantity + " stocks of " + ticker);
+				
+				if(current_balance.get(0).compareTo(quantity * stock_price) < 0) {           
+					//we don't have that much balance, transaction failed
+					System.out.println("Transaction failed due to insufficient balance. Unsuccessful purchase\r\n"
+							+ "of " + quantity +  "stocks of " + ticker);
+				}
+				else {
+					current_balance.set(0, current_balance.get(0) - quantity * stock_price);
+					Thread.sleep(2000);
+				}
+			}	
+			
+		} catch (InterruptedException ie) {
+			System.out.println("MyThread.run IE: " + ie.getMessage());
+		}finally {
+			System.out.println("Current Balance after trade: " + current_balance.get(0));
+			semaphore.release();
+		}
+	}
+}

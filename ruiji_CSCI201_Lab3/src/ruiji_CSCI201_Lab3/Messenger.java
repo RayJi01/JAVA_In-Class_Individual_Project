@@ -1,0 +1,23 @@
+package ruiji_CSCI201_Lab3;
+
+public class Messenger extends Thread {
+	private MessageQueue s;
+	public Messenger(MessageQueue s) {               //call the constructor of MessageQueue.
+		this.s = s;	
+	}
+	
+	public void run() {
+			try {
+				for(int i = 0; i < 20; i++) {
+					String insert = "Messenger - The message is running " + i + "th times";
+					String time = Util.getCurrentTime();
+					System.out.println(insert + " " + time);
+					s.addMessage(insert);
+					Thread.sleep(500);
+				}
+			} catch (InterruptedException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
+		}
+}

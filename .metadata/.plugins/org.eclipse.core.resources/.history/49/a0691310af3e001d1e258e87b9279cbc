@@ -1,0 +1,82 @@
+package ruiji_CSCI201_Lab5;
+
+import java.util.ArrayList;
+import java.util.concurrent.*;
+
+public class Mutithread_search {
+	private ArrayList<Integer> input_list;
+	private int search_num;
+	private long time_start;
+	private long time_end;
+	
+	public Mutithread_search(ArrayList<Integer> input_list, int search_num) {
+		this.input_list = input_list;
+		this.search_num = search_num;
+	}
+	
+	public int search() {
+		int num_thread = 4;
+		ForkJoinPool pool = new ForkJoinPool();
+		int start = 0, end = input_list.size()/num_thread;
+		Probe prb[] = new Probe[num_thread];
+		
+		time_start = System.nanoTime();
+		for(int i = 0; i < num_thread; i++) {
+			prb[i] = new Probe(start, end, input_list, search_num);
+			start = end;
+			end = input_list.size()/num_thread * (i+2);
+			pool.execute(prb[i]);
+		}
+		time_end = System.nanoTime();
+		long time_elapsed = time_end - time_start;
+		
+		for(int i = 0 ; i < num_thread; i++) {
+			if(prb[i].join().intValue() != -1) {
+				return prb[i].join().intValue();
+			}
+		}
+		
+		System.out.println("Cannot find the item with " + time_elapsed + " time spent!");
+		return -1;
+	}
+}
+
+class Probe extends RecursiveTask<Integer>{
+	/**
+	 * 
+	 */
+	private static final long serialVersionUID = 1L;
+	private int start;
+	private int end;
+	private ArrayList<Integer> input_list;
+	private int search_num;
+	private long time_start;
+	private long time_end;
+	
+	public Probe(int start, int end, ArrayList<Integer> input, int search_num) {
+		this.start = start;
+		this.end = end;
+		this.input_list = input;
+		this.search_num = search_num;
+	}
+	
+	public int search() {
+		time_start = System.nanoTime();
+		long time_elapsed;
+		for(int i = start; i < end; i++) {
+			if(input_list.get(i).equals(search_num)) {
+				time_end = System.nanoTime();
+				time_elapsed = time_end - time_start;
+				System.out.println("The time used for search by multithread is " + time_elapsed);
+				return i;
+			}
+		}
+		
+		return -1;
+	}
+	
+	public Integer compute() {
+		Integer k = this.search();
+		return k;
+	}
+}

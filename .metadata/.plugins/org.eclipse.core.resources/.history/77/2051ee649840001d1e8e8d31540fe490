@@ -1,0 +1,48 @@
+package ruiji_CSCI201_Assignment2;
+
+import java.util.List;
+import java.util.concurrent.Semaphore;
+
+public class Operations extends Thread {
+	private Semaphore semaphore;
+	private String ticker;
+	private int quantity;
+	private List<Integer> current_balance;
+	private int stock_price;
+	
+	public Operations(int Broker_num, String ticker, int quantity, List<Integer> current_balance, int stock_price) {
+		this.semaphore = new Semaphore(Broker_num);
+		this.ticker = ticker;
+		this.quantity = quantity;
+		this.current_balance = current_balance;
+		this.stock_price = stock_price;
+	}
+	
+	public void run() {
+		try {
+			semaphore.acquire();                        //acquire the lock. 
+			Thread.sleep(2000);                         //sleep for 2 seconds first before trade
+			Integer previous = current_balance.get(0);
+			if(quantity < 0) {                          //means wanna sell. Sleep for 3 seconds. 
+				if(quantity == -1) System.out.println("Start to sell of" + quantity * -1 + " stock of " + ticker);
+				else
+					System.out.println("Start to sell of" + quantity * -1 + " stocks of " + ticker);
+					
+				current_balance.set(0, previous + quantity * stock_price);
+				Thread.sleep(3000);
+				if(quantity == -1) System.out.println("Finish selling of" + quantity * -1 + " stock of " + ticker);
+				else
+					System.out.println("Finish selling of" + quantity * -1 + " stocks of " + ticker);;
+			}
+			else {                                      //means wanna buy, sleep for 2 seconds. 
+				if(previous.compareTo(quantity * stock_price) < 0) {
+					
+				}
+			}
+		} catch (InterruptedException ie) {
+			System.out.println("MyThread.run IE: " + ie.getMessage());
+		}finally {
+			semaphore.release();
+		}
+	}
+}

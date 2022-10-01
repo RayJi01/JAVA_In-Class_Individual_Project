@@ -1,0 +1,55 @@
+package ruiji_CSCI201_Lab5;
+
+import java.util.ArrayList;
+import java.util.concurrent.*;
+
+public class Mutithread_search {
+	private ArrayList<Integer> input_list;
+	private int search_num;
+	
+	public Mutithread_search(ArrayList<Integer> input_list, int search_num) {
+		this.input_list = input_list;
+		this.search_num = search_num;
+	}
+	
+	public int search() {
+		
+	}
+	
+	public 
+	
+	
+}
+
+class Probe extends Thread{
+	private int start;
+	private int end;
+	private ArrayList<Integer> input_list;
+	private int search_num;
+	private long time_start;
+	private long time_end;
+	
+	public Probe(int start, int end, ArrayList<Integer> input, int search_num) {
+		this.start = start;
+		this.end = end;
+		this.input_list = input;
+		this.search_num = search_num;
+	}
+	
+	public int search() {
+		time_start = System.nanoTime();
+		long time_elapsed;
+		for(int i = start; i <= end; i++) {
+			if(input_list.get(i).equals(search_num)) {
+				time_end = System.nanoTime();
+				time_elapsed = time_end - time_start;
+				System.out.println("The time used for search by multithread is " + time_elapsed);
+				return i;
+			}
+		}
+		
+		time_elapsed = time_end - time_start;
+		System.out.println("Run through all items with " + time_elapsed + " and cannot find the item. ");
+		return -1;
+	}
+}

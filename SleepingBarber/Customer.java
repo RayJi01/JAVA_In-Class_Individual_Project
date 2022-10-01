@@ -1,0 +1,74 @@
+package SleepingBarber
+
+import java.util.concurrent.locks.Condition;
+import java.util.concurrent.locks.Lock;
+import java.util.concurrent.locks.ReentrantLock;
+
+public class Customer extends Thread {
+
+	private int customerName;
+	private SleepingBarber sb;
+	private SleepingBarber sb2;
+	private Lock customerLock;
+	private Condition gettingHaircutCondition;
+	public Customer(int customerName, SleepingBarber sb, SleepingBarber sb2) {
+		this.customerName = customerName;
+		this.sb = sb;
+		this.sb2 = sb2;
+		customerLock = new ReentrantLock();
+		gettingHaircutCondition = customerLock.newCondition();
+	}
+	
+	public int getCustomerName() {
+		return customerName;
+	}
+	public void startingHaircut() {
+		Util.printMessage("Customer " + customerName + " is getting hair cut.");
+	}
+	public String getBarberName(SleepingBarber sba) {
+		return sba.getBNName();
+	}
+	public void finishingHaircut() {
+		Util.printMessage("Customer " + customerName + " is done getting hair cut.");
+		try {
+			customerLock.lock();
+			gettingHaircutCondition.signal();
+		} finally {
+			customerLock.unlock();
+		}
+	}
+	public void run() {
+		boolean seatsAvailable = sb1.addCustomerToWaiting(this);
+		boolean seatsAvailable2 = sb2.addCustomerToWaiting(this);
+		if (!seatsAvailable && !seatsAvailable2) {
+			Util.printMessage("Customer " + customerName + " leaving...no seats available.");
+			return;
+		}
+		else {
+			if(!seatsAvailable) {                                        //case that barber 1 is working while barber 2 is free
+				sb2.wakeUpBarber();
+				try {
+					customerLock.lock();
+					gettingHaircutCondition.await();
+				} catch (InterruptedException ie) {
+					System.out.println("ie getting haircut: " + ie.getMessage());
+				} finally {
+					customerLock.unlock();
+				}
+				Util.printMessage("Customer " + customerName + " is leaving.");	
+			}
+			else {                                                       //if barber 1 is free, then everytime we want barber 1 to work. 
+				sb.wakeUpBarber();
+				try {
+					customerLock.lock();
+					gettingHaircutCondition.await();
+				} catch (InterruptedException ie) {
+					System.out.println("ie getting haircut: " + ie.getMessage());
+				} finally {
+					customerLock.unlock();
+				}
+				Util.printMessage("Customer " + customerName + " is leaving.");
+			}
+		}	
+	}
+}
