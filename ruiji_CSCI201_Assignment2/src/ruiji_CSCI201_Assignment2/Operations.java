@@ -45,14 +45,10 @@ public class Operations extends Thread {
 				timestamp = new SettleDate(current - time);
 				//we have to implement the synchronized class inside the if statement cause if statement may cost time that making the overwritten happened. 
 				if(quantity_stock == -1) {
-					int current_b = bu.updateBalance();                                  
-					System.out.println("[" + timestamp.getTime() + "]" + "Finish sale of " + quantity_stock * -1 + " stock of " + ticker);
-					System.out.println("Current Balance after trade: " + current_b);
+					System.out.println("[" + timestamp.getTime() + "]" + " Finish selling of " + quantity_stock * -1 + " stock of " + ticker + "\r\n" + "Current Balance after trade: " + bu.updateBalance());
 				}
 				else {
-					int current_b = bu.updateBalance();
-					System.out.println("[" + timestamp.getTime() + "]" + "Finish sale of " + quantity_stock * -1 + " stocks of " + ticker);
-					System.out.println("Current Balance after trade: " + current_b);
+					System.out.println("[" + timestamp.getTime() + "]" + " Finish selling of " + quantity_stock * -1 + " stock of " + ticker + "\r\n" + "Current Balance after trade: " + bu.updateBalance());
 				}
 			}
 			//Buying processes started, and the thread will sleep for 2 seconds to finish his job. 
@@ -74,14 +70,10 @@ public class Operations extends Thread {
 					current = System.currentTimeMillis();
 					timestamp = new SettleDate(current - time);
 					if(quantity_stock == 1) {
-						int current_b = bu.updateBalance();
-						System.out.println("[" + timestamp.getTime() + "]" + " Finish buying of " + quantity_stock + " stock of " + ticker);
-						System.out.println("Current Balance after trade: " + current_b);
+						System.out.println("[" + timestamp.getTime() + "]" + " Finish buying of " + quantity_stock + " stock of " + ticker + "\r\n" + "Current Balance after trade: " + bu.updateBalance());
 					}
 					else {
-						int current_b = bu.updateBalance();
-						System.out.println("[" + timestamp.getTime() + "]" + "Finish buying of " + quantity_stock + " stocks of " + ticker);
-						System.out.println("Current Balance after trade: " + current_b);
+						System.out.println("[" + timestamp.getTime() + "]" + " Finish buying of " + quantity_stock + " stock of " + ticker + "\r\n" + "Current Balance after trade: " + bu.updateBalance());	
 					}
 				}
 			}
@@ -119,7 +111,7 @@ class BalanceUpdate{                                     //the class interface w
 		return true;
 	}
 	
-	public int getNowBalance() {
+	public synchronized int getNowBalance() {
 		return current_balance.get(0);
 	}
 }

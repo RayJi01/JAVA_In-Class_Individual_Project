@@ -61,7 +61,7 @@ public class Json_readln {
 		do {
 			error = false;
 			try {
-				System.out.println("What is the name of the file that containing company information?");
+				System.out.println("What is the name of the file that containing transaction information?");
 				int column = 0;
 				filename = sc.nextLine();
 				File new_CSV = new File(filename);

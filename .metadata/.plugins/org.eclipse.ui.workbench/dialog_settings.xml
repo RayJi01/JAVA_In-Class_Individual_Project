@@ -14,6 +14,7 @@
 		<item key="WizardZipFileResourceExportPage1.STORE_CREATE_STRUCTURE_ID" value="true"/>
 		<item key="WizardZipFileResourceExportPage1.STORE_COMPRESS_CONTENTS_ID" value="true"/>
 		<list key="WizardZipFileResourceExportPage1.STORE_DESTINATION_NAMES_ID">
+			<item value="D:\USC 2022-2023 Junior Study\CSCI 201\Assignment2_Archive.zip"/>
 			<item value="D:\USC 2022-2023 Junior Study\CSCI 201\Assignment_Archive.zip"/>
 			<item value="D:\Java_Files\lab1_check_off.zip"/>
 		</list>
