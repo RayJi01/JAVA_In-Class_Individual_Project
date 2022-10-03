@@ -3,6 +3,7 @@ package ruiji_CSCI201_Assignment2;
 import java.util.List;
 import java.util.concurrent.Semaphore;
 import ruiji_CSCI201_Assignment2.SettleDate;
+import java.util.concurrent.locks.*;
 
 public class Operations extends Thread {
 	private Semaphore semaphore;
@@ -12,7 +13,6 @@ public class Operations extends Thread {
 	private boolean FinalTrans;
 	private BalanceUpdate bu;
 	private int quantity_stock;
-	
 	
 	public Operations(int Broker_num, String ticker, int quantity, List<Integer> current_balance, int stock_price, int getTime, long time, boolean FinalTrans) {
 		this.semaphore = new Semaphore(Broker_num);
@@ -93,6 +93,7 @@ class BalanceUpdate{                                     //the class interface w
 	private List<Integer> current_balance;
 	private int quantity;
 	private int stock_price;
+	private Lock lock = new ReentrantLock();
 	
 	public BalanceUpdate(List<Integer> current_balance, int quantity, int stock_price) {
 		this.current_balance = current_balance;
@@ -100,18 +101,36 @@ class BalanceUpdate{                                     //the class interface w
 		this.quantity = quantity;
 	}
 	
-	public synchronized int updateBalance() {
-		int update_num = quantity * stock_price;
-		current_balance.set(0, current_balance.get(0) - update_num);
-		return current_balance.get(0);
+	public int updateBalance() {
+		lock.lock();
+		try {
+			int update_num = quantity * stock_price;
+			current_balance.set(0, current_balance.get(0) - update_num);
+			return current_balance.get(0);
+		}finally {
+			lock.unlock();
+		}
+			
 	}
 	
-	public synchronized boolean canTransact() {
-		if(current_balance.get(0).compareTo(quantity * stock_price) < 0) return false;
-		return true;
+	public boolean canTransact() {
+		lock.lock();
+		try {
+			if(current_balance.get(0).compareTo(quantity * stock_price) < 0) return false;
+			return true;
+		}finally {
+			lock.unlock();
+		}
+			
 	}
 	
-	public synchronized int getNowBalance() {
-		return current_balance.get(0);
+	public int getNowBalance() {
+		lock.lock();
+		try {
+			return current_balance.get(0);
+		}finally {
+			lock.unlock();
+		}
+		
 	}
 }
