@@ -124,8 +124,8 @@ public class ClientProgram extends Thread{
 							start = i+1;
 							col++;
 						}
-						else if(line.charAt(i) == ' ' && col == 3) {
-							time = Long.parseLong(line.substring(start, i));
+						else if(col == 3) {
+							time = Long.parseLong(line.substring(start));
 							break;
 						}
 					}

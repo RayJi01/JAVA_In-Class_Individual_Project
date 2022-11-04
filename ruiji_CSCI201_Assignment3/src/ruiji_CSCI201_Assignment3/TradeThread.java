@@ -111,7 +111,8 @@ public class TradeThread extends Thread{
 				String Name = ti.getName();
 				String quantity = Integer.toString(ti.getHowmany());
 				String price = Double.toString(transaction_price.get(i));
-				String line = Name + " " + quantity + " " + price + " " + time;
+				String time_string = Long.toString(time);
+				String line = Name + " " + quantity + " " + price + " " + time_string;
 				if(Integer.parseInt(quantity) < 0) { 
 					finalBalance += Integer.parseInt(quantity) *-1 *Double.parseDouble(price);
 				}
